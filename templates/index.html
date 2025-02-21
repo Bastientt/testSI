@@ -83,7 +83,7 @@
                     photoContainer.classList.add('photo-container');
         
                     const img = document.createElement('img');
-                    img.src = `data:image/png;base64,${photo.image}`;
+                    img.src = `data:image/${photo.type};base64,${photo.image}`;
                     img.classList.add('photo');
         
                     const photoId = document.createElement('div');
@@ -98,7 +98,6 @@
         }
         
         window.onload = loadPhotos;
-        </script>
-        
+    </script>
 </body>
 </html>

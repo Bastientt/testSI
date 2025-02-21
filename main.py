@@ -1,6 +1,9 @@
 import os
 import sqlite3
+import base64
 from flask import Flask, request, render_template, jsonify
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -42,7 +45,13 @@ def upload_file():
 @app.route('/photos')
 def photos():
     photos = get_images()
-    photo_list = [{'id': id, 'image': image.hex()} for id, image in photos]
+    photo_list = []
+    for id, image_data in photos:
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        photo_list.append({
+            'id': id,
+            'image': image_base64
+        })
     return jsonify(photo_list)
 
 if __name__ == '__main__':
