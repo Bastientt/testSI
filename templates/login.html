@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .container { width: 300px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; }
+        button { width: 100%; padding: 10px; background-color: blue; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: darkblue; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Connexion</h2>
+        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <button onclick="login()">Se connecter</button>
+        <p>Pas de compte ? <a href="#" onclick="showRegister()">Inscrivez-vous</a></p>
+
+        <div id="register" style="display:none;">
+            <h2>Inscription</h2>
+            <input type="text" id="new_username" placeholder="Nom d'utilisateur" required>
+            <input type="password" id="new_password" placeholder="Mot de passe" required>
+            <button onclick="register()">S'inscrire</button>
+            <p><a href="#" onclick="showLogin()">Retour</a></p>
+        </div>
+    </div>
+
+    <script>
+        function showRegister() {
+            document.querySelector("h2").innerText = "Inscription";
+            document.getElementById("register").style.display = "block";
+            document.querySelector(".container p").style.display = "none";
+        }
+
+        function showLogin() {
+            document.querySelector("h2").innerText = "Connexion";
+            document.getElementById("register").style.display = "none";
+            document.querySelector(".container p").style.display = "block";
+        }
+
+        function login() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert("Connexion réussie !");
+                    window.location.href = "/photosPage";
+                }
+            });
+        }
+
+        function register() {
+            let username = document.getElementById("new_username").value;
+            let password = document.getElementById("new_password").value;
+
+            fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert("Inscription réussie !");
+                    showLogin();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
